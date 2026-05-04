@@ -1,3 +1,4 @@
+--- STRING OPERARIONS
 ---What is DECLARE in SQL Server?
 Declare is used to craete a variable in sql server - a temporary container that hold avalue while your code is running
 
