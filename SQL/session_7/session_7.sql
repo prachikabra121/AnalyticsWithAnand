@@ -1,3 +1,4 @@
+---Group by, having, union and union all examples
 CREATE TABLE Sales (
     Id INT,
     Product VARCHAR(50),
