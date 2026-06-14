@@ -1,0 +1,12 @@
+CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_EMAIL,CUSTOMER_CITY,CUSTOMER_STATE,CUSTOMER_SEGMENT
+CUST001,Arjun Verma,arjun.verma@mail.com,Bengaluru,Karnataka,Consumer
+CUST002,Meera Joshi,meera.joshi@mail.com,Pune,Maharashtra,SMB
+CUST003,Vikram Singh,vikram.singh@mail.com,Jaipur,Rajasthan,SMB
+CUST004,Diya Patel,diya.patel@mail.com,Ahmedabad,Gujarat,SMB
+CUST005,Priya Nair,priya.nair@mail.com,Bengaluru,Karnataka,Corporate
+CUST006,Rohan Mehta,rohan.mehta@mail.com,Pune,Maharashtra,Consumer
+CUST007,Aarav Sharma,aarav.sharma@mail.com,Mumbai,Maharashtra,Consumer
+CUST008,Rahul Kapoor,rahul.kapoor@mail.com,Delhi,Delhi,Corporate
+CUST009,Ananya Das,ananya.das@mail.com,Kolkata,West Bengal,Consumer
+CUST010,Ishita Gupta,ishita.gupta@mail.com,Ahmedabad,Gujarat,Corporate
+CUST011,Sneha Reddy,sneha.reddy@mail.com,Hyderabad,Telangana,Consumer
