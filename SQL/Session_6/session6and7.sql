@@ -1,0 +1,121 @@
+select * from [dbo].[documents]
+
+
+Create table emp_ala
+(
+emp_id int primary key,
+emp_name varchar(30) not null,
+emp_sal float
+)
+
+INSERT INTO emp_ala VALUES(1,'ANAND',200000),(2,'KARAN',588999),(3,'PRACHI',344667),(4,'SIKHA',70678),(5,'KARAN',450000)
+
+SELECT * FROM emp_ala
+
+DELETE FROM emp_ala WHERE emp_id=5
+
+INSERT INTO emp_ala VALUES(5,'KEVIN',20000),(6,'ASHISH',34566),(7,'SUPRIYA',906778)
+
+
+SELECT * FROM emp_ala
+SELECT EMP_ID,EMP_NAME,EMP_SAL,EMP_SAL*0.2+EMP_SAL AS INCREASED_SAL FROM emp_ala WHERE EMP_SAL<100000
+
+
+
+SELECT * FROM emp_ala WHERE EMP_NAME LIKE '%v%'
+
+
+SELECT * FROM emp_ala WHERE EMP_NAME ='kevIN'
+
+SELECT * FROM emp_ala WHERE EMP_NAME LIKE '%y' AND EMP_SAL <75000
+
+SELECT * FROM emp_ala
+SELECT * FROM emp_ala WHERE EMP_NAME LIKE '%y' OR EMP_SAL >75000
+
+SELECT * FROM emp_ala WHERE EMP_NAME NOT LIKE '%A' OR EMP_SAL >75000
+
+SELECT * FROM emp_ala WHERE NOT EMP_NAME  = 'PRACHI'
+
+SELECT * FROM emp_ala WHERE EMP_NAME <> 'PRACHI'
+
+SELECT * FROM emp_ala WHERE  EMP_NAME  != 'PRACHI'
+
+SELECT * FROM [dbo].[ORDERS]
+
+CREATE TABLE DEPARTMENTS 
+(
+EMP_ID INT,
+DP_ID INT,
+DEPARTMENT_NAME VARCHAR(30)
+)
+
+
+INSERT INTO DEPARTMENTS VALUES(1,12,'IT'),(2,34,'HR'),(5,34,'HR'),(3,12,'IT'),(6,78,'ADMIN')
+
+SELECT * FROM DEPARTMENTS
+
+SELECT DISTINCT DEPARTMENT_NAME FROM DEPARTMENTS
+
+SELECT DISTINCT DEPARTMENT_NAME,DP_ID FROM DEPARTMENTS
+
+
+DROP TABLE emp_ala
+
+Create table emp_ala
+(
+emp_id int primary key,
+emp_name varchar(30) not null,
+emp_sal float,
+EMAIL VARCHAR(50)
+)
+
+INSERT INTO emp_ala VALUES(1,'ANAND',200000,'AND@GMAIL.COM'),(2,'KARAN',588999,'KRN@GMAIL.COM'),(3,'PRACHI',344667,'PK@GAMIL.COM'),(4,'SIKHA',70678,'SK@GMAIL.COM'),(5,'RAJ',450000,'RJ@GMAIL.COM')
+
+
+INSERT INTO  EMP_ALA(emp_id,emp_name,emp_sal)VALUES(6,'SANDY',899009),(7,'RAM',907665)
+
+SELECT * FROM emp_ala WHERE EMAIL IS NULL
+
+SELECT emp_name AS NAME FROM emp_ala WHERE EMAIL IS NOT NULL
+
+SELECT emp_name NAME FROM emp_ala WHERE emp_name LIKE 'A%'
+
+
+SELECT TABLEA.ID,TABLEA.NAME,TABLEB.SAL,TABLEB.DESIGNATION FROM TABLEA JOIN TABLEB ON TABLEA.ID=TABLEB.ID
+
+SELECT A.ID,A.NAME,B.SAL,B.DESIGNATION FROM TABLEA A JOIN TABLEB B ON A.ID=B.ID
+
+
+SELECT GETDATE() AS CurrentDateTime;
+
+
+SELECT DATEPART(YEAR,  GETDATE()) AS Yr
+SELECT DATEPART(Month,  GETDATE()) AS Month
+SELECT DATEPART(Day,  GETDATE()) AS day
+
+SELECT DATEDIFF(DAY, '2024-01-01', GETDATE())
+AS DaysSinceNewYear;
+
+SELECT DATEDIFF(Month, '2024-01-01', GETDATE())
+AS MonthSinceNewYear;
+
+SELECT DATEDIFF(YeAR, '2024-01-01', GETDATE())
+AS yearsSinceNewYear;
+
+
+SELECT DATEADD(DAY,   30, GETDATE()) AS In30Days;
+
+SELECT DATEADD(DAY,   -30, GETDATE()) AS ago30Days;
+
+
+select avg(emp_sal) from emp_ala
+
+select * from emp_ala order by emp_sal;
+
+select Top(3) * from emp_ala order by emp_sal ASC
+
+select Top(3) * from emp_ala order by emp_sal DESC
+
+
+select *,emp_sal*0.2+emp_sal as annual_increament from emp_ala order by annual_increament;
+
