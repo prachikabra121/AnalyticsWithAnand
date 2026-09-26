@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pandas: The Complete Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee; --bg2:#ffffff; --ink:#16221f; --ink2:#48544f; --muted:#8b948e;
+  --accent:#1f6f5c; --accent2:#e8f2ee; --line:#dcd7cb; --code-bg:#0e1613; --code-ink:#d9ecdf;
+  --danger:#a34a3b;
+  font: 16px/1.5 "Inter", system-ui, sans-serif;
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --bg:#0f1512; --bg2:#161f1b; --ink:#e7ede9; --ink2:#a9b4ad; --muted:#6d766f;
+    --accent:#5fcdae; --accent2:#17251f; --line:#28352e; --code-bg:#0a100d; --code-ink:#bfe9d3;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1512; --bg2:#161f1b; --ink:#e7ede9; --ink2:#a9b4ad; --muted:#6d766f;
+  --accent:#5fcdae; --accent2:#17251f; --line:#28352e; --code-bg:#0a100d; --code-ink:#bfe9d3;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+a{color:var(--accent);}
+h1,h2,h3{font-weight:700;letter-spacing:-0.01em;}
+code,pre,.mono{font-family:"JetBrains Mono", ui-monospace, monospace;}
+
+.shell{display:flex;min-height:100vh;max-width:1280px;margin:0 auto;}
+nav.side{
+  width:264px;flex-shrink:0;border-right:1px solid var(--line);
+  padding:28px 14px 28px 18px;position:sticky;top:0;align-self:flex-start;
+  height:100dvh;overflow-y:auto;
+}
+.brand{display:flex;align-items:baseline;gap:8px;margin-bottom:22px;padding:0 6px;}
+.brand .mark{width:10px;height:10px;border-radius:3px;background:var(--accent);flex-shrink:0;}
+.brand h1{font-size:16px;margin:0;}
+.brand span{color:var(--muted);font-size:12px;}
+.navlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;}
+.navlist button{
+  all:unset;display:flex;gap:10px;align-items:baseline;width:100%;padding:7px 8px;
+  border-radius:7px;cursor:pointer;color:var(--ink2);font-size:13.5px;
+}
+.navlist button:hover{background:var(--accent2);color:var(--ink);}
+.navlist button.active{background:var(--accent2);color:var(--accent);font-weight:600;}
+.navlist .n{font-family:"JetBrains Mono", monospace;font-size:11px;color:var(--muted);width:18px;flex-shrink:0;}
+
+main{flex:1;min-width:0;padding:36px clamp(20px,4vw,56px) 100px;}
+.section{display:none;max-width:760px;}
+.section.active{display:block;animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section h2{font-size:26px;margin:0 0 4px;}
+.kicker{color:var(--accent);font-size:13px;font-family:"JetBrains Mono",monospace;margin-bottom:6px;}
+.section > p.lead{color:var(--ink2);font-size:15px;margin-top:8px;}
+.section h3{font-size:16px;margin:28px 0 8px;}
+.section p{color:var(--ink2);font-size:14.5px;}
+.section ul,.section ol{color:var(--ink2);font-size:14.5px;padding-left:20px;}
+.section li{margin:4px 0;}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0 20px;}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;}
+th{color:var(--ink);font-weight:600;}
+td code{color:var(--accent);}
+
+pre{
+  background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;
+  overflow-x:auto;font-size:13px;line-height:1.55;margin:10px 0 18px;border:1px solid var(--line);
+}
+pre code{font-family:inherit;}
+p code, li code{background:var(--accent2);color:var(--accent);padding:1px 5px;border-radius:4px;font-size:13px;}
+
+.usecase{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;background:var(--bg2);}
+.usecase h4{margin:0 0 4px;font-size:14.5px;}
+.usecase .tag{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;}
+
+.qa{border:1px solid var(--line);border-radius:10px;margin:8px 0;background:var(--bg2);overflow:hidden;}
+.qa summary{cursor:pointer;padding:12px 16px;font-size:14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px;}
+.qa summary::-webkit-details-marker{display:none;}
+.qa summary::after{content:"+";color:var(--accent);font-weight:700;}
+.qa[open] summary::after{content:"–";}
+.qa .body{padding:0 16px 16px;color:var(--ink2);font-size:14px;}
+
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:20;transition:width .15s;}
+.topbar{display:none;}
+@media (max-width:820px){
+  .shell{flex-direction:column;}
+  nav.side{width:100%;height:auto;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--line);
+    padding:12px 10px;background:var(--bg);z-index:10;}
+  .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:4px;}
+  .navlist button{white-space:nowrap;}
+  .brand{margin-bottom:8px;}
+  main{padding:24px 16px 80px;}
+}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" style="width:0%"></div>
+<div class="shell">
+<nav class="side">
+  <div class="brand"><div class="mark"></div><h1>Pandas</h1><span>complete guide</span></div>
+  <ul class="navlist" id="navlist"></ul>
+</nav>
+<main id="main"></main>
+</div>
+
+<script>
+const sections = [
+{id:"intro", title:"Introduction", kicker:"01 · Why Pandas", body:`
+<p class="lead">Pandas is Python's core library for working with tabular data — built on NumPy, created by Wes McKinney in 2008. It gives you two labeled, high-performance structures: <code>Series</code> (1D) and <code>DataFrame</code> (2D), plus the tools to load, clean, reshape and analyze data at scale.</p>
+<h3>Where it sits in the pipeline</h3>
+<pre>Raw Data (CSV/DB/API) → Pandas (load/clean/transform) → NumPy/SciPy
+→ Scikit-learn / Statsmodels (modeling) → Matplotlib/Plotly (viz)</pre>
+<h3>Why it beats raw Python</h3>
+<table><tr><th>Problem</th><th>Pandas fix</th></tr>
+<tr><td>Lists/dicts are slow at scale</td><td>Vectorized ops via NumPy/C — near-C speed</td></tr>
+<tr><td>No labeled rows/columns</td><td><code>DataFrame</code>/<code>Series</code> with an <code>Index</code></td></tr>
+<tr><td>Manual missing-value handling</td><td>Built-in <code>NaN</code>, <code>.isna()</code>, <code>.fillna()</code></td></tr>
+<tr><td>Combining datasets is tedious</td><td><code>merge()</code>/<code>join()</code> mirror SQL joins</td></tr>
+</table>
+<pre>import pandas as pd
+import numpy as np   # always import together</pre>`},
+
+{id:"structures", title:"Data Structures", kicker:"02 · Series & DataFrame", body:`
+<p class="lead">A <code>Series</code> is a labeled 1D array; a <code>DataFrame</code> is a 2D table — really a dict of Series sharing one index.</p>
+<pre>s = pd.Series([10,20,30], index=['a','b','c'], name="marks")
+s.values   # array([10,20,30]) — a plain NumPy array
+s.index    # Index(['a','b','c'])
+s['b']     # 20 — label-based
+s.iloc[1]  # 20 — position-based</pre>
+<pre>df = pd.DataFrame({"name":["Asha","Vikram"], "age":[23,35]})
+df.index; df.columns; df.dtypes; df.values</pre>
+<h3>Index alignment — the core theory</h3>
+<p>Arithmetic aligns on labels <em>first</em>, then computes. Mismatches produce <code>NaN</code>, not an error — unlike raw NumPy which aligns by position only.</p>
+<pre>s1 = pd.Series([1,2,3], index=['a','b','c'])
+s2 = pd.Series([10,20,30], index=['b','c','d'])
+s1 + s2
+# a   NaN  b  22.0  c  33.0  d   NaN</pre>`},
+
+{id:"io", title:"Reading & Writing Data", kicker:"03 · I/O", body:`
+<p class="lead">One line replaces a custom parser. This is where most real projects start.</p>
+<pre>df = pd.read_csv("sales.csv",
+    usecols=["order_id","amount","date"],   # load only what you need
+    dtype={"amount":"float32"},              # explicit dtype saves memory
+    parse_dates=["date"],
+    na_values=["NA","--"],
+    chunksize=100_000)                       # huge files → iterator
+
+df = pd.read_excel("report.xlsx", sheet_name="Sheet1")
+df = pd.read_sql("SELECT * FROM orders", engine)
+df = pd.read_json("data.json")
+df = pd.read_parquet("data.parquet")   # columnar, compressed, dtype-preserving
+
+df.to_csv("out.csv", index=False)
+df.to_parquet("out.parquet", compression="snappy")</pre>
+<h3>Streaming a file too big for memory</h3>
+<pre>total = 0
+for chunk in pd.read_csv("huge.csv", chunksize=500_000):
+    total += chunk["amount"].sum()</pre>
+<p><strong>Why Parquet in production:</strong> columnar, compressed, preserves dtypes, 5–10× faster reads than CSV — the standard for data lakes.</p>`},
+
+{id:"indexing", title:"Indexing & Selection", kicker:"04 · loc / iloc", body:`
+<p class="lead">The most-tested practical topic in interviews.</p>
+<table><tr><th></th><th>Basis</th><th>Slice end</th></tr>
+<tr><td><code>.loc[]</code></td><td>Label</td><td>Inclusive</td></tr>
+<tr><td><code>.iloc[]</code></td><td>Position</td><td>Exclusive (standard Python)</td></tr>
+</table>
+<pre>df.loc[0:2, "name":"city"]     # rows+cols by label, BOTH inclusive
+df.iloc[0:2, 0:2]                # rows+cols by position, end exclusive
+df.at[0, "name"]; df.iat[0, 1]   # fast scalar access</pre>
+<h3>Boolean masks</h3>
+<pre>df[(df["age"]>25) & (df["city"]=="Pune")]   # AND → &, not 'and'
+df[~(df["age"]>30)]                          # NOT → ~
+df[df["city"].isin(["Pune","Delhi"])]
+df.query("age > 25 and city == 'Pune'")      # readable alternative</pre>
+<p><strong>Why not <code>and</code>/<code>or</code>?</strong> Masks are arrays — Python's boolean keywords need a single truth value and raise <code>ValueError</code>. Always use <code>&amp; | ~</code> with parentheses.</p>
+<h3>Classic pitfall</h3>
+<pre># ⚠️ SettingWithCopyWarning — ambiguous view vs copy
+df_f = df[df["age"]>25]
+df_f["flag"] = 1
+# ✅ be explicit
+df_f = df[df["age"]>25].copy()</pre>`},
+
+{id:"cleaning", title:"Data Cleaning", kicker:"05 · Missing & Duplicates", body:`
+<p class="lead">Real data is dirty — studies estimate 60–80% of analyst time goes here.</p>
+<pre>df.isna().sum()                       # missing per column
+df.dropna(subset=["age"])
+df.fillna({"age": df["age"].median(), "city":"Unknown"})
+df.ffill(); df.bfill(); df.interpolate()
+
+df.drop_duplicates(subset=["email"], keep="last")
+
+df["date"]  = pd.to_datetime(df["date"], errors="coerce")   # bad → NaT
+df["price"] = pd.to_numeric(df["price"], errors="coerce")   # bad → NaN
+df["cat"]   = df["cat"].astype("category")</pre>
+<h3>Outliers (IQR method)</h3>
+<pre>Q1,Q3 = df["salary"].quantile([.25,.75])
+IQR = Q3-Q1
+df_clean = df[df["salary"].between(Q1-1.5*IQR, Q3+1.5*IQR)]</pre>
+<p><strong>Why <code>NaN</code> not <code>None</code>?</strong> NumPy arrays need one dtype; <code>NaN</code> is a float sentinel that keeps vectorized math working (<code>.sum()</code> etc. skip it by default).</p>`},
+
+{id:"transform", title:"Transformation", kicker:"06 · apply / map / where", body:`
+<pre>df["total"] = df["price"] * df["qty"]              # vectorized — always prefer this
+df["grp"]   = df["age"].apply(lambda x: "Adult" if x>=18 else "Minor")
+df["score"] = df["grade"].map({"A":90,"B":80})       # Series substitution
+
+df["flag"] = np.where(df["salary"]>50000, "High", "Low")   # faster than apply
+df["bucket"] = pd.cut(df["age"], bins=[0,18,35,60,100], labels=["Teen","Young","Adult","Senior"])
+df["quart"]  = pd.qcut(df["salary"], q=4, labels=["Q1","Q2","Q3","Q4"])
+
+df.sort_values(["city","age"], ascending=[True,False])
+df.nlargest(5, "salary")   # faster than sort_values().head()</pre>
+<p><strong>Speed ranking</strong> (fastest → slowest): vectorized ops → <code>np.where</code>/<code>np.select</code> → <code>.apply()</code> → <code>.itertuples()</code> → <code>.iterrows()</code>.</p>`},
+
+{id:"groupby", title:"GroupBy", kicker:"07 · Split · Apply · Combine", body:`
+<p class="lead">Pandas' most powerful analytical engine — and the concept interviewers probe deepest.</p>
+<pre>df.groupby("dept")["salary"].agg(["mean","sum","count"])
+df.groupby("dept").agg(
+    avg_salary=("salary","mean"),
+    headcount=("emp_id","count"))                 # named aggregation
+
+df.groupby("dept").filter(lambda g: g["salary"].mean()>50000)
+df.groupby("dept")["salary"].transform(lambda x: x - x.mean())  # same shape as input
+df.groupby("dept").apply(lambda g: g.nlargest(1,"salary"))       # top earner per dept</pre>
+<table><tr><th>Method</th><th>Output shape</th><th>Use for</th></tr>
+<tr><td><code>agg</code></td><td>One row per group</td><td>Summary stats</td></tr>
+<tr><td><code>transform</code></td><td>Same as input</td><td>Broadcast group stat to every row</td></tr>
+<tr><td><code>apply</code></td><td>Flexible</td><td>Custom per-group logic</td></tr>
+</table>
+<h3>Real example — customer summary</h3>
+<pre>orders.groupby("customer_id").agg(
+    total_spent=("amount","sum"),
+    num_orders=("order_id","nunique"),
+    last_purchase=("date","max"))</pre>`},
+
+{id:"merge", title:"Merge, Join, Concat", kicker:"08 · Combining data", body:`
+<pre>pd.merge(orders, customers, on="customer_id", how="left")
+pd.merge(df1, df2, left_on="cust_id", right_on="customer_id")
+pd.concat([df1, df2], axis=0, ignore_index=True)   # stack rows
+pd.concat([df1, df2], axis=1)                        # stack columns
+df1.join(df2, how="left")                            # merge on index</pre>
+<table><tr><th>Join</th><th>Behavior</th></tr>
+<tr><td><code>inner</code></td><td>Only matching keys in both tables</td></tr>
+<tr><td><code>left</code></td><td>All left rows; unmatched right → NaN</td></tr>
+<tr><td><code>outer</code></td><td>All rows from both, unmatched → NaN</td></tr>
+</table>
+<p><strong>Distinction:</strong> <code>concat</code> just stitches DataFrames (no key matching); <code>merge</code> is a SQL-style relational join; <code>join</code> is a shortcut for merging on the index.</p>`},
+
+{id:"reshape", title:"Reshaping", kicker:"09 · pivot / melt / stack", body:`
+<pre>pd.pivot_table(sales, values="revenue", index="region",
+    columns="quarter", aggfunc="sum", fill_value=0, margins=True)
+
+pd.melt(df, id_vars=["student"],
+    value_vars=["math","science"], var_name="subject", value_name="score")
+
+df.stack()     # columns → innermost row index
+df.unstack()   # innermost row index → columns
+df.T           # transpose</pre>
+<p><code>pivot()</code> reshapes without aggregating (needs unique index/column pairs); <code>pivot_table()</code> aggregates — use it whenever duplicates are possible.</p>`},
+
+{id:"timeseries", title:"Time Series", kicker:"10 · Dates & rolling windows", body:`
+<pre>df["date"] = pd.to_datetime(df["date"])
+df = df.set_index("date")
+df.resample("ME")["sales"].sum()       # monthly totals
+df.resample("D").ffill()                # fill gaps
+
+df["7d_avg"]  = df["sales"].rolling(7).mean()
+df["cum"]     = df["sales"].expanding().sum()
+df["ewm"]     = df["sales"].ewm(span=7).mean()
+df["lag1"]    = df["sales"].shift(1)
+df["pct_chg"] = df["sales"].pct_change()
+
+df["date"].dt.year; df["date"].dt.day_name(); df["date"].dt.quarter</pre>`},
+
+{id:"strings", title:"String Operations", kicker:"11 · The .str accessor", body:`
+<p class="lead">Vectorized text ops — far faster than looping row by row.</p>
+<pre>df["name"].str.lower().str.strip()
+df["name"].str.contains("an", case=False)
+df["email"].str.split("@").str[0]
+df["phone"].str.extract(r"(\\d{3})-(\\d{4})")
+df["tags"].str.split(",", expand=True)</pre>`},
+
+{id:"perf", title:"Performance", kicker:"12 · Memory & speed", body:`
+<pre>df["age"]   = pd.to_numeric(df["age"], downcast="integer")
+df["price"] = pd.to_numeric(df["price"], downcast="float")
+df["city"]  = df["city"].astype("category")   # huge memory win for repeated strings
+
+pd.read_csv("big.csv", usecols=["id","amount"], dtype={"id":"int32"})
+pd.set_option("mode.copy_on_write", True)       # pandas 2.x — avoids view/copy bugs</pre>
+<pre># SLOW — Python-level loop
+total = 0
+for _, row in df.iterrows(): total += row["price"]*row["qty"]
+# FAST — vectorized
+total = (df["price"] * df["qty"]).sum()</pre>
+<p>Ranking fastest → slowest: <strong>vectorized ops</strong> → <code>.apply()</code> → list comprehension over <code>.values</code> → <code>.itertuples()</code> → <code>.iterrows()</code> (avoid in production).</p>`},
+
+{id:"usecases", title:"Real-World Use Cases", kicker:"13 · Applied Pandas", body:`
+<div class="usecase"><div class="tag">Finance</div><h4>Portfolio risk metrics</h4>
+<pre>returns = prices.pct_change().dropna()
+sharpe = ((1+returns.mean())**252-1) / (returns.std()*np.sqrt(252))
+rolling_vol = returns.rolling(30).std()</pre>
+<p>Used daily by funds to compute risk across thousands of instruments.</p></div>
+
+<div class="usecase"><div class="tag">E-commerce</div><h4>RFM customer segmentation</h4>
+<pre>rfm = orders.groupby("customer_id").agg(
+    recency=("order_date", lambda x: (snap-x.max()).days),
+    frequency=("order_id","nunique"), monetary=("amount","sum"))
+rfm["r"] = pd.qcut(rfm["recency"], 5, labels=[5,4,3,2,1])</pre>
+<p>Marketing teams use this to target "at-risk high spenders" for win-back campaigns.</p></div>
+
+<div class="usecase"><div class="tag">Product Analytics</div><h4>Cohort retention</h4>
+<pre>events["cohort"] = events.groupby("user_id")["date"].transform("min").dt.to_period("M")
+pivot = events.groupby(["cohort","period"])["user_id"].nunique().unstack()
+retention = pivot.divide(pivot.iloc[:,0], axis=0)</pre>
+<p>SaaS teams use retention curves like this to judge whether a feature improved stickiness.</p></div>
+
+<div class="usecase"><div class="tag">Operations</div><h4>Server error-rate monitoring</h4>
+<pre>logs["ts"] = pd.to_datetime(logs["ts"])
+err_rate = logs.groupby(logs["ts"].dt.floor("H"))["status"].apply(lambda s:(s>=500).mean())
+top_ips = logs[logs["status"]>=500]["ip"].value_counts().head(10)</pre></div>`},
+
+{id:"pitfalls", title:"Pitfalls & Best Practices", kicker:"14 · What trips people up", body:`
+<table><tr><th>Pitfall</th><th>Fix</th></tr>
+<tr><td><code>SettingWithCopyWarning</code></td><td>Use <code>.loc[mask,"col"]=x</code> or <code>.copy()</code></td></tr>
+<tr><td><code>and</code>/<code>or</code> on a Series</td><td>Use <code>&amp; | ~</code> with parentheses</td></tr>
+<tr><td>Slow <code>.iterrows()</code> loops</td><td>Vectorize, or use <code>.itertuples()</code></td></tr>
+<tr><td>int→float coercion on NaN</td><td>Use nullable <code>Int64</code> dtype</td></tr>
+<tr><td>Merge creates duplicate rows</td><td><code>merge(..., validate="one_to_one")</code></td></tr>
+<tr><td>Memory blow-up on big CSVs</td><td><code>dtype=</code>, <code>usecols=</code>, <code>chunksize=</code>, categoricals</td></tr>
+</table>
+<ul>
+<li>Always run <code>.info()</code> / <code>.describe()</code> before analysis.</li>
+<li>Prefer vectorized ops; reserve <code>.apply()</code> for genuine row-wise logic.</li>
+<li>Set explicit dtypes on read to control memory from the start.</li>
+</ul>`},
+
+{id:"interview", title:"Interview Q&A", kicker:"15 · Theory + Coding", body:`
+<details class="qa" open><summary>Series vs DataFrame?</summary><div class="body">A <code>Series</code> is a 1D labeled array of one dtype; a <code>DataFrame</code> is a 2D table — a dict of Series sharing one index, each column able to hold its own dtype.</div></details>
+<details class="qa"><summary><code>loc</code> vs <code>iloc</code>?</summary><div class="body"><code>loc</code> is label-based and inclusive when slicing; <code>iloc</code> is position-based and exclusive, matching normal Python slicing.</div></details>
+<details class="qa"><summary>How does Pandas represent missing data internally?</summary><div class="body">Numeric: <code>NaN</code> (IEEE-754 float). Datetime: <code>NaT</code>. Most aggregations default to <code>skipna=True</code>.</div></details>
+<details class="qa"><summary><code>merge()</code> vs <code>join()</code> vs <code>concat()</code>?</summary><div class="body"><code>merge</code> = SQL-style join on columns; <code>join</code> = shortcut for merging on the index; <code>concat</code> = stacks DataFrames with no key matching.</div></details>
+<details class="qa"><summary><code>transform()</code> vs <code>agg()</code> in groupby?</summary><div class="body"><code>agg</code> reduces each group to one row; <code>transform</code> keeps the input's shape, broadcasting a group result back onto every row — used for group-wise normalization.</div></details>
+<details class="qa"><summary>Why avoid <code>.iterrows()</code>?</summary><div class="body">It's a Python-level loop creating a Series per row — 10-100× slower than vectorized operations on large data.</div></details>
+<details class="qa"><summary>What is a MultiIndex?</summary><div class="body">A hierarchical index with multiple levels on one axis — e.g. (region, year) as a row index — used to represent higher-dimensional data in 2D.</div></details>
+<details class="qa"><summary>Coding: second-highest salary per department</summary><div class="body"><pre>df.groupby("dept")["salary"].apply(lambda x: x.nlargest(2).min())</pre></div></details>
+<details class="qa"><summary>Coding: rows only in the left table after a merge</summary><div class="body"><pre>m = df1.merge(df2, on="key", how="left", indicator=True)
+left_only = m[m["_merge"]=="left_only"]</pre></div></details>
+<details class="qa"><summary>Coding: 7-day rolling average per store</summary><div class="body"><pre>df["roll"] = df.groupby("store_id")["sales"].transform(lambda x: x.rolling(7).mean())</pre></div></details>
+<details class="qa"><summary>How would you process a 10 GB CSV that won't fit in memory?</summary><div class="body">Stream it with <code>chunksize</code>, restrict <code>usecols</code>/<code>dtype</code>, or switch to Parquet + chunked reads / Dask for out-of-core computation.</div></details>
+<details class="qa"><summary><code>size()</code> vs <code>count()</code> after groupby?</summary><div class="body"><code>size()</code> counts rows per group including NaNs; <code>count()</code> counts non-null values per column per group — they diverge when data is missing.</div></details>`},
+
+{id:"cheatsheet", title:"Cheat Sheet", kicker:"16 · Quick reference", body:`
+<pre>## Read/Write
+pd.read_csv(); pd.read_excel(); pd.read_sql(); pd.read_parquet()
+df.to_csv(); df.to_excel(); df.to_parquet()
+
+## Inspect
+df.head(); df.info(); df.describe(); df.isna().sum(); df.nunique()
+
+## Select
+df.loc[rows, cols]; df.iloc[rows, cols]; df.at[r,c]
+df[df["col"]>x]; df.query("col > x")
+
+## Clean
+df.dropna(); df.fillna(v); df.drop_duplicates()
+df.astype(t); pd.to_datetime(); pd.to_numeric()
+
+## Transform
+df["c"] = df["a"]*df["b"]; df["x"].apply(f); np.where(cond,a,b)
+pd.cut(); pd.qcut(); df.sort_values(); df.nlargest(n,c)
+
+## Group / Combine
+df.groupby("k")["v"].agg(["mean","sum"])
+df.groupby("k").transform(f)
+pd.merge(df1, df2, on="k", how="left"); pd.concat([df1,df2])
+
+## Reshape / Time
+pd.pivot_table(df, index=, columns=, values=, aggfunc=)
+pd.melt(df, id_vars=, value_vars=)
+df.set_index("date").resample("ME").sum()
+df["x"].rolling(7).mean(); df["x"].shift(1)
+
+## Strings
+df["s"].str.lower(); .str.contains(); .str.split(); .str.extract()</pre>
+<p style="margin-top:24px;color:var(--muted);font-size:13px;">Built as a self-study reference, a lab-exercise source (every block is runnable), and an interview-prep sheet for the final week of a training program.</p>`}
+];
+
+const nav = document.getElementById('navlist');
+const main = document.getElementById('main');
+sections.forEach((s,i)=>{
+  const li = document.createElement('li');
+  const btn = document.createElement('button');
+  btn.textContent = s.title; btn.dataset.id = s.id;
+  const n = document.createElement('span'); n.className='n'; n.textContent = String(i+1).padStart(2,'0');
+  btn.prepend(n);
+  btn.onclick = ()=> show(s.id);
+  li.appendChild(btn); nav.appendChild(li);
+
+  const sec = document.createElement('section');
+  sec.className='section'; sec.id='sec-'+s.id;
+  sec.innerHTML = `<div class="kicker">${s.kicker}</div><h2>${s.title}</h2>${s.body}`;
+  main.appendChild(sec);
+});
+
+function show(id){
+  document.querySelectorAll('.section').forEach(el=>el.classList.toggle('active', el.id==='sec-'+id));
+  document.querySelectorAll('.navlist button').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  const idx = sections.findIndex(s=>s.id===id);
+  document.getElementById('progress').style.width = (((idx+1)/sections.length)*100)+'%';
+  try{ localStorage.setItem('pandas-guide-last', id); }catch(e){}
+  main.scrollTo({top:0});
+  window.location.hash = id;
+}
+let start = sections[0].id;
+try{
+  const h = window.location.hash.replace('#','');
+  const saved = localStorage.getItem('pandas-guide-last');
+  if (h && sections.some(s=>s.id===h)) start = h;
+  else if (saved && sections.some(s=>s.id===saved)) start = saved;
+}catch(e){}
+show(start);
+</script>
+</body>
+</html>
