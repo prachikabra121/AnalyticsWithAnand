@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matplotlib · Seaborn · Plotly — Complete Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<style>
+:root{
+  --bg:#f5f3ee; --bg2:#ffffff; --ink:#16221f; --ink2:#48544f; --muted:#8b948e;
+  --accent:#c1521f; --accent2:#fbeee4; --line:#dcd7cb; --code-bg:#0e1613; --code-ink:#d9ecdf;
+  --plot1:#c1521f; --plot2:#1f6f5c; --plot3:#2f6fa8; --plot4:#a34a3b; --plot5:#8b6bb5;
+  font: 16px/1.5 "Inter", system-ui, sans-serif;
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --bg:#0f1210; --bg2:#181b17; --ink:#ede9e4; --ink2:#b0aca3; --muted:#726d64;
+    --accent:#e8804a; --accent2:#241a12; --line:#302b23; --code-bg:#0a0d0a; --code-ink:#e9dfc9;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1210; --bg2:#181b17; --ink:#ede9e4; --ink2:#b0aca3; --muted:#726d64;
+  --accent:#e8804a; --accent2:#241a12; --line:#302b23; --code-bg:#0a0d0a; --code-ink:#e9dfc9;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+a{color:var(--accent);}
+h1,h2,h3{font-weight:700;letter-spacing:-0.01em;}
+code,pre,.mono{font-family:"JetBrains Mono", ui-monospace, monospace;}
+
+.shell{display:flex;min-height:100vh;max-width:1320px;margin:0 auto;}
+nav.side{width:260px;flex-shrink:0;border-right:1px solid var(--line);padding:28px 14px 28px 18px;
+  position:sticky;top:0;align-self:flex-start;height:100dvh;overflow-y:auto;}
+.brand{display:flex;align-items:baseline;gap:8px;margin-bottom:22px;padding:0 6px;}
+.brand .mark{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.brand h1{font-size:15px;margin:0;}
+.brand span{color:var(--muted);font-size:11.5px;}
+.navlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;}
+.navlist button{all:unset;display:flex;gap:10px;align-items:baseline;width:100%;padding:7px 8px;
+  border-radius:7px;cursor:pointer;color:var(--ink2);font-size:13px;}
+.navlist button:hover{background:var(--accent2);color:var(--ink);}
+.navlist button.active{background:var(--accent2);color:var(--accent);font-weight:600;}
+.navlist .n{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted);width:18px;flex-shrink:0;}
+
+main{flex:1;min-width:0;padding:36px clamp(20px,4vw,56px) 100px;}
+.section{display:none;max-width:800px;}
+.section.active{display:block;animation:fadein .25s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section h2{font-size:25px;margin:0 0 4px;}
+.kicker{color:var(--accent);font-size:13px;font-family:"JetBrains Mono",monospace;margin-bottom:6px;}
+.section > p.lead{color:var(--ink2);font-size:15px;margin-top:8px;}
+.section h3{font-size:16px;margin:26px 0 8px;}
+.section p{color:var(--ink2);font-size:14.5px;}
+.section ul{color:var(--ink2);font-size:14.5px;padding-left:20px;}
+.section li{margin:4px 0;}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0 20px;}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top;}
+th{color:var(--ink);font-weight:600;}
+td code{color:var(--accent);}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;
+  overflow-x:auto;font-size:13px;line-height:1.55;margin:10px 0 18px;border:1px solid var(--line);}
+p code, li code{background:var(--accent2);color:var(--accent);padding:1px 5px;border-radius:4px;font-size:13px;}
+
+.viz-card{border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0;background:var(--bg2);}
+.viz-card .cap{font-size:12px;color:var(--muted);margin-top:8px;text-align:center;}
+.icon-row{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0;}
+.icon-box{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg2);text-align:center;flex:1;min-width:120px;}
+.icon-box svg{width:100%;height:auto;display:block;}
+.icon-box span{display:block;font-size:11.5px;color:var(--muted);margin-top:6px;}
+.plotdiv{width:100%;height:320px;}
+.usecase{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:14px 0;background:var(--bg2);}
+.usecase h4{margin:0 0 4px;font-size:14.5px;}
+.usecase .tag{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;}
+.qa{border:1px solid var(--line);border-radius:10px;margin:8px 0;background:var(--bg2);overflow:hidden;}
+.qa summary{cursor:pointer;padding:12px 16px;font-size:14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px;}
+.qa summary::-webkit-details-marker{display:none;}
+.qa summary::after{content:"+";color:var(--accent);font-weight:700;}
+.qa[open] summary::after{content:"–";}
+.qa .body{padding:0 16px 16px;color:var(--ink2);font-size:14px;}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:20;transition:width .15s;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media (max-width:820px){
+  .shell{flex-direction:column;}
+  nav.side{width:100%;height:auto;position:sticky;top:0;border-right:none;border-bottom:1px solid var(--line);
+    padding:12px 10px;background:var(--bg);z-index:10;}
+  .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:4px;}
+  .navlist button{white-space:nowrap;}
+  main{padding:24px 16px 80px;}
+  .grid2{grid-template-columns:1fr;}
+}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" style="width:0%"></div>
+<div class="shell">
+<nav class="side">
+  <div class="brand"><div class="mark"></div><h1>Data Viz</h1><span>matplotlib · seaborn · plotly</span></div>
+  <ul class="navlist" id="navlist"></ul>
+</nav>
+<main id="main"></main>
+</div>
+
+<script>
+// ---- reusable SVG chart icons (illustrating matplotlib/seaborn output) ----
+const ICONS = {
+line: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<polyline points="20,70 45,55 70,60 95,30 120,40 145,15" fill="none" stroke="var(--plot1)" stroke-width="2.5"/></svg>`,
+bar: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<rect x="30" y="50" width="18" height="35" fill="var(--plot1)"/><rect x="58" y="30" width="18" height="55" fill="var(--plot2)"/>
+<rect x="86" y="45" width="18" height="40" fill="var(--plot3)"/><rect x="114" y="20" width="18" height="65" fill="var(--plot4)"/></svg>`,
+hist: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<rect x="25" y="70" width="14" height="15" fill="var(--plot1)"/><rect x="41" y="50" width="14" height="35" fill="var(--plot1)"/>
+<rect x="57" y="25" width="14" height="60" fill="var(--plot1)"/><rect x="73" y="35" width="14" height="50" fill="var(--plot1)"/>
+<rect x="89" y="55" width="14" height="30" fill="var(--plot1)"/><rect x="105" y="72" width="14" height="13" fill="var(--plot1)"/></svg>`,
+scatter: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<circle cx="40" cy="65" r="4" fill="var(--plot2)"/><circle cx="60" cy="50" r="4" fill="var(--plot2)"/><circle cx="55" cy="70" r="4" fill="var(--plot2)"/>
+<circle cx="85" cy="40" r="4" fill="var(--plot2)"/><circle cx="95" cy="55" r="4" fill="var(--plot2)"/><circle cx="115" cy="25" r="4" fill="var(--plot2)"/>
+<circle cx="125" cy="45" r="4" fill="var(--plot2)"/><circle cx="105" cy="65" r="4" fill="var(--plot2)"/></svg>`,
+box: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<line x1="60" y1="20" x2="60" y2="35" stroke="var(--plot3)"/><rect x="45" y="35" width="30" height="30" fill="none" stroke="var(--plot3)" stroke-width="2"/>
+<line x1="45" y1="50" x2="75" y2="50" stroke="var(--plot3)" stroke-width="2"/><line x1="60" y1="65" x2="60" y2="78" stroke="var(--plot3)"/>
+<line x1="100" y1="28" x2="100" y2="40" stroke="var(--plot4)"/><rect x="85" y="40" width="30" height="25" fill="none" stroke="var(--plot4)" stroke-width="2"/>
+<line x1="85" y1="52" x2="115" y2="52" stroke="var(--plot4)" stroke-width="2"/><line x1="100" y1="65" x2="100" y2="75" stroke="var(--plot4)"/></svg>`,
+violin: `<svg viewBox="0 0 160 100"><line x1="20" y1="10" x2="20" y2="85" stroke="var(--muted)"/><line x1="20" y1="85" x2="150" y2="85" stroke="var(--muted)"/>
+<path d="M60 20 C40 30 40 55 60 60 C80 55 80 30 60 20 Z" fill="var(--plot5)" opacity="0.6"/>
+<path d="M60 60 C48 65 48 78 60 80 C72 78 72 65 60 60 Z" fill="var(--plot5)" opacity="0.6"/>
+<path d="M105 25 C88 33 88 52 105 58 C122 52 122 33 105 25 Z" fill="var(--plot1)" opacity="0.6"/>
+<path d="M105 58 C95 63 95 74 105 78 C115 74 115 63 105 58 Z" fill="var(--plot1)" opacity="0.6"/></svg>`,
+heatmap: `<svg viewBox="0 0 160 100">${(()=>{let s='';const c=['#c1521f','#e8804a','#f2b088','#f6d9c4','#dcd7cb'];for(let r=0;r<4;r++)for(let col=0;col<5;col++){s+=`<rect x="${20+col*24}" y="${10+r*20}" width="22" height="18" fill="${c[(r+col)%5]}"/>`;}return s;})()}</svg>`,
+pairgrid: `<svg viewBox="0 0 160 100">${(()=>{let s='';for(let r=0;r<3;r++)for(let col=0;col<3;col++){const x=15+col*48,y=8+r*30;s+=`<rect x="${x}" y="${y}" width="42" height="24" fill="none" stroke="var(--line)"/>`;if(r===col){s+=`<rect x="${x+8}" y="${y+10}" width="6" height="10" fill="var(--plot2)"/><rect x="${x+18}" y="${y+4}" width="6" height="16" fill="var(--plot2)"/><rect x="${x+28}" y="${y+8}" width="6" height="12" fill="var(--plot2)"/>`;}else{s+=`<circle cx="${x+12}" cy="${y+16}" r="2" fill="var(--plot3)"/><circle cx="${x+22}" cy="${y+10}" r="2" fill="var(--plot3)"/><circle cx="${x+30}" cy="${y+18}" r="2" fill="var(--plot3)"/>`;}}return s;})()}</svg>`
+};
+
+const sections = [
+{id:"intro", title:"Introduction", kicker:"01 · Three libraries, one goal", body:`
+<p class="lead">Python's visualization stack has three main layers, each built on the one below it. Knowing which to reach for is half the skill.</p>
+<table><tr><th>Library</th><th>Layer</th><th>Best for</th></tr>
+<tr><td><strong>Matplotlib</strong></td><td>Foundation (low-level)</td><td>Full control, publication-quality static figures</td></tr>
+<tr><td><strong>Seaborn</strong></td><td>Statistical wrapper on Matplotlib</td><td>Fast, good-looking statistical plots from DataFrames</td></tr>
+<tr><td><strong>Plotly</strong></td><td>Interactive, browser-rendered</td><td>Dashboards, zoom/hover/tooltips, web apps</td></tr>
+</table>
+<pre>import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go</pre>
+<h3>The stack, visually</h3>
+<pre>Plotly  → interactive, JS-rendered, dashboards & reports
+Seaborn → statistical shortcuts, built ON TOP of Matplotlib
+Matplotlib → the base engine every static chart in Python ultimately uses</pre>`},
+
+{id:"theory", title:"Theory & Architecture", kicker:"02 · How each one actually works", body:`
+<p class="lead">The three libraries aren't just "different styles" of the same thing — they're built on genuinely different rendering models. Understanding this explains almost every practical difference between them.</p>
+<h3>1. Imperative vs Declarative — the core paradigm split</h3>
+<table><tr><th>Paradigm</th><th>Libraries</th><th>What it means</th></tr>
+<tr><td><strong>Imperative</strong></td><td>Matplotlib, <code>graph_objects</code></td><td>You issue step-by-step drawing commands: "draw a line here, now add a label, now draw a box." You control the exact sequence.</td></tr>
+<tr><td><strong>Declarative</strong></td><td>Seaborn, <code>plotly.express</code></td><td>You describe <em>what you want</em> — "map <code>price</code> to x, <code>category</code> to color" — and the library decides how to draw it. Rooted in Leland Wilkinson's <strong>Grammar of Graphics</strong> (the same theory behind R's ggplot2).</td></tr>
+</table>
+<h3>2. Rendering pipeline — where the pixels actually come from</h3>
+<pre>Matplotlib:  Figure → Axes → Artists → Renderer → Backend (Agg/PDF/SVG)  →  static image bytes
+Seaborn:     DataFrame → statistical transform (bin/aggregate/estimate CI) → Matplotlib Axes  →  same backend as above
+Plotly:      DataFrame → JSON spec {data: [...traces], layout: {...}} → plotly.js in the BROWSER → SVG/WebGL DOM elements</pre>
+<p>This is the single most important architectural fact: Matplotlib and Seaborn render to <strong>fixed pixels/vectors at generation time</strong> (in Python, server-side). Plotly instead ships a <strong>data specification</strong> that a JavaScript engine renders <strong>live, in the browser</strong> — which is exactly why Plotly charts can be zoomed, panned and hovered after the fact, and Matplotlib/Seaborn charts cannot.</p>
+<h3>3. What Seaborn actually adds on top of Matplotlib (theory, not just syntax)</h3>
+<ul>
+<li><strong>Statistical estimation:</strong> <code>sns.lineplot</code> automatically bootstraps a confidence interval band; <code>regplot</code> fits and draws a regression line — Matplotlib does none of this for you.</li>
+<li><strong>Tidy-data mapping:</strong> Seaborn functions take a whole DataFrame plus column names (<code>x=</code>, <code>y=</code>, <code>hue=</code>); Matplotlib takes raw arrays only.</li>
+<li><strong>Underneath, it still returns Matplotlib objects</strong> — <code>ax = sns.boxplot(...)</code> gives you a normal <code>Axes</code> you can keep customizing with plain Matplotlib calls. Seaborn never replaces Matplotlib; it generates Matplotlib commands for you.</li>
+</ul>
+<h3>4. Output-artifact theory: why file size and portability differ</h3>
+<table><tr><th></th><th>Matplotlib / Seaborn</th><th>Plotly</th></tr>
+<tr><td>Typical output</td><td>PNG/JPEG (raster) or PDF/SVG/EPS (vector)</td><td>An HTML file embedding the JSON data + the plotly.js runtime</td></tr>
+<tr><td>File size driver</td><td>Image resolution (dpi), independent of data size</td><td>Grows with the <em>row count</em> of data plotted — every point is shipped to the browser</td></tr>
+<tr><td>Needs a browser?</td><td>No — it's a flat image/document</td><td>Yes — it's JS that runs on load</td></tr>
+<tr><td>Editable after export?</td><td>No — pixels/vectors are baked in</td><td>Yes — viewer can zoom/pan/hide series without re-running Python</td></tr>
+</table>
+<p><strong>Practical consequence:</strong> plotting a 5-million-row scatter with Plotly can produce a multi-hundred-MB HTML file and a sluggish browser tab; Matplotlib/Seaborn render the same data to a fixed-size image regardless of row count (you pay the cost once, in Python, not in every viewer's browser).</p>
+<h3>5. Why this maps to "when to use which" (recap of the theory in one line)</h3>
+<p>Static, print-safe, resolution-controlled → <strong>Matplotlib</strong>. Statistical-estimation shortcuts on a DataFrame, still static → <strong>Seaborn</strong>. Ship an explorable artifact that lives and reacts inside a browser → <strong>Plotly</strong>.</p>`},
+
+{id:"mpl-anatomy", title:"Matplotlib: Anatomy", kicker:"03 · Figure, Axes, Artists", body:`
+<p class="lead">Every Matplotlib chart is built from the same object hierarchy: <code>Figure</code> (the whole canvas) contains one or more <code>Axes</code> (an individual plot), which contain <em>Artists</em> — lines, text, patches.</p>
+<pre>fig, ax = plt.subplots(figsize=(6,4))     # OO API — preferred for real projects
+ax.plot(x, y, label="revenue")
+ax.set_xlabel("Month"); ax.set_ylabel("₹"); ax.set_title("Monthly Revenue")
+ax.legend()
+plt.savefig("chart.png", dpi=150, bbox_inches="tight")</pre>
+<h3>pyplot (quick) vs OO (production) API</h3>
+<pre># pyplot — implicit state, fine for quick exploration
+plt.plot(x, y); plt.title("Quick look"); plt.show()
+
+# Object-Oriented — explicit, scales to multi-panel figures, testable
+fig, ax = plt.subplots()
+ax.plot(x, y); ax.set_title("Production-ready")</pre>
+<p><strong>Interview note:</strong> the OO API is preferred once a script has more than one subplot, since <code>plt.xxx()</code> calls implicitly act on "whatever axes was last active" — fragile in larger codebases.</p>`},
+
+{id:"mpl-charts", title:"Matplotlib: Core Charts", kicker:"04 · Line · Bar · Hist · Scatter", body:`
+<p class="lead">Four chart types cover most exploratory work. Each renders as a static image — here's what the output looks like next to the code that makes it.</p>
+<div class="icon-row">
+  <div class="icon-box">${ICONS.line}<span>ax.plot()</span></div>
+  <div class="icon-box">${ICONS.bar}<span>ax.bar()</span></div>
+  <div class="icon-box">${ICONS.hist}<span>ax.hist()</span></div>
+  <div class="icon-box">${ICONS.scatter}<span>ax.scatter()</span></div>
+</div>
+<pre>fig, axes = plt.subplots(2, 2, figsize=(10,7))
+axes[0,0].plot(months, revenue, color="tab:orange", marker="o")
+axes[0,1].bar(categories, sales, color=["#c1521f","#1f6f5c","#2f6fa8","#a34a3b"])
+axes[1,0].hist(prices, bins=20, color="tab:orange", edgecolor="white")
+axes[1,1].scatter(price, rating, alpha=0.6, c=sales, cmap="viridis")
+fig.tight_layout()</pre>`},
+
+{id:"mpl-custom", title:"Matplotlib: Customization", kicker:"05 · Styling & Subplots", body:`
+<pre>plt.style.use("seaborn-v0_8-whitegrid")     # built-in style sheets
+
+fig, ax = plt.subplots()
+ax.plot(x, y)
+ax.annotate("Peak", xy=(x[3], y[3]), xytext=(x[3]+1, y[3]+5),
+            arrowprops=dict(arrowstyle="->"))
+ax.axhline(y=100, color="red", linestyle="--", label="Target")
+ax.fill_between(x, y, alpha=0.2)
+
+# Grid of subplots sharing an x-axis
+fig, axes = plt.subplots(3, 1, sharex=True, figsize=(8,6))
+for ax, col in zip(axes, ["revenue","cost","profit"]):
+    ax.plot(df["date"], df[col]); ax.set_ylabel(col)</pre>
+<h3>Saving for print vs web</h3>
+<pre>fig.savefig("report.pdf")                          # vector — for print/papers
+fig.savefig("web.png", dpi=200, transparent=True)   # raster — for web/slides</pre>`},
+
+{id:"sns-overview", title:"Seaborn: Overview", kicker:"06 · Statistical plotting", body:`
+<p class="lead">Seaborn wraps Matplotlib with a DataFrame-first API and sensible statistical defaults — one line often replaces ten lines of manual Matplotlib.</p>
+<pre>import seaborn as sns
+sns.set_theme(style="whitegrid", palette="deep")   # sets defaults for EVERY matplotlib plot after this
+
+sns.scatterplot(data=df, x="price", y="rating", hue="category", size="sales")
+sns.lineplot(data=df, x="month", y="revenue", hue="region", errorbar="sd")   # auto confidence band</pre>
+<h3>Figure-level vs Axes-level functions (key interview distinction)</h3>
+<table><tr><th>Type</th><th>Examples</th><th>Returns</th></tr>
+<tr><td>Axes-level</td><td><code>scatterplot</code>, <code>boxplot</code>, <code>heatmap</code></td><td>a single <code>ax</code> — composable into subplots</td></tr>
+<tr><td>Figure-level</td><td><code>relplot</code>, <code>catplot</code>, <code>displot</code></td><td>a whole <code>FacetGrid</code> — auto multi-panel faceting via <code>col=</code>/<code>row=</code></td></tr>
+</table>
+<pre>sns.relplot(data=df, x="price", y="rating", col="category", kind="scatter")  # auto small-multiples</pre>`},
+
+{id:"sns-charts", title:"Seaborn: Statistical Charts", kicker:"07 · Box · Violin · Heatmap · Pairplot", body:`
+<div class="icon-row">
+  <div class="icon-box">${ICONS.box}<span>boxplot</span></div>
+  <div class="icon-box">${ICONS.violin}<span>violinplot</span></div>
+  <div class="icon-box">${ICONS.heatmap}<span>heatmap</span></div>
+  <div class="icon-box">${ICONS.pairgrid}<span>pairplot</span></div>
+</div>
+<pre>sns.boxplot(data=df, x="category", y="price")            # median, IQR, outliers
+sns.violinplot(data=df, x="category", y="price", inner="quartile")  # + full distribution shape
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", center=0)        # correlation matrix
+sns.pairplot(df, hue="category", diag_kind="kde")                    # every variable vs every other</pre>
+<p><strong>Box vs violin:</strong> a box plot shows summary quartiles only; a violin plot adds the full kernel-density shape of the distribution — use violin when the shape itself (bimodal? skewed?) matters, box when you just need quick outlier/spread comparison across many categories.</p>`},
+
+{id:"sns-style", title:"Seaborn: Styling & Facets", kicker:"08 · Themes and small multiples", body:`
+<pre>sns.set_theme(context="talk", style="darkgrid", font_scale=1.1)  # presentation-ready in one line
+sns.despine()                                                       # remove top/right borders
+
+g = sns.FacetGrid(df, col="region", row="category", margin_titles=True)
+g.map(sns.histplot, "price")
+
+sns.jointplot(data=df, x="price", y="rating", kind="hex")   # scatter + marginal histograms combined</pre>
+<p>Five built-in styles (<code>darkgrid</code>, <code>whitegrid</code>, <code>dark</code>, <code>white</code>, <code>ticks</code>) and four contexts (<code>paper</code>, <code>notebook</code>, <code>talk</code>, <code>poster</code>) cover almost every publication need without manual Matplotlib styling.</p>`},
+
+{id:"ply-overview", title:"Plotly: Overview", kicker:"09 · Interactive by default", body:`
+<p class="lead">Plotly renders charts as interactive HTML/JS objects — zoom, pan, hover tooltips and legend toggling work out of the box, in a notebook or a web page.</p>
+<pre>import plotly.express as px          # high-level, one-liner charts (like Seaborn)
+import plotly.graph_objects as go    # low-level, full control (like Matplotlib)
+
+fig = px.line(df, x="month", y="revenue", color="region", markers=True)
+fig.show()
+
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=df["month"], y=df["revenue"], mode="lines+markers"))
+fig.update_layout(title="Revenue", template="plotly_white")
+fig.show()</pre>
+<h3>Express vs Graph Objects (interview distinction)</h3>
+<table><tr><th></th><th>plotly.express</th><th>graph_objects</th></tr>
+<tr><td>Style</td><td>Declarative, one function call</td><td>Imperative, build trace by trace</td></tr>
+<tr><td>Use for</td><td>Fast EDA on a DataFrame</td><td>Custom dashboards, mixed chart types, fine control</td></tr>
+</table>`},
+
+{id:"ply-live", title:"Plotly: Live Interactive Charts", kicker:"10 · Try them — hover, zoom, toggle", body:`
+<p class="lead">These are real, running Plotly charts — not screenshots. Hover for tooltips, drag to zoom, click a legend item to hide a series.</p>
+<div class="viz-card"><div class="plotdiv" id="plot-line"></div><div class="cap">px.line — monthly revenue by region, with hover + zoom</div></div>
+<div class="viz-card"><div class="plotdiv" id="plot-bar"></div><div class="cap">px.bar — category sales, colored by category</div></div>
+<div class="viz-card"><div class="plotdiv" id="plot-bubble"></div><div class="cap">px.scatter — price vs rating, sized by sales volume (bubble chart)</div></div>
+<pre>fig = px.line(df, x="month", y="revenue", color="region")
+fig = px.bar(df, x="category", y="sales", color="category")
+fig = px.scatter(df, x="price", y="rating", size="sales", color="category",
+                  hover_name="product", size_max=40)</pre>`},
+
+{id:"ply-dash", title:"Plotly: Dashboards & Subplots", kicker:"11 · Combining views", body:`
+<div class="grid2">
+  <div class="viz-card"><div class="plotdiv" id="plot-mini1" style="height:220px"></div></div>
+  <div class="viz-card"><div class="plotdiv" id="plot-mini2" style="height:220px"></div></div>
+</div>
+<pre>from plotly.subplots import make_subplots
+fig = make_subplots(rows=1, cols=2, subplot_titles=("Revenue Trend", "Category Mix"))
+fig.add_trace(go.Scatter(x=months, y=revenue, mode="lines"), row=1, col=1)
+fig.add_trace(go.Pie(labels=categories, values=sales), row=1, col=2)
+fig.update_layout(showlegend=False, height=400)
+fig.show()
+
+# Export a fully interactive standalone HTML file — no Python needed to view it
+fig.write_html("dashboard.html")</pre>
+<p><strong>Real usage:</strong> <code>write_html()</code> is how analysts ship a self-contained interactive report to a stakeholder who has no Python installed — they just open it in a browser.</p>`},
+
+{id:"choose", title:"When to Use Which", kicker:"12 · Decision guide", body:`
+<table><tr><th>Scenario</th><th>Pick</th><th>Why</th></tr>
+<tr><td>Paper / journal figure</td><td>Matplotlib</td><td>Vector export, pixel-level control, universally accepted</td></tr>
+<tr><td>Quick EDA correlation/distribution check</td><td>Seaborn</td><td>One line vs ten; sane statistical defaults</td></tr>
+<tr><td>Stakeholder-facing dashboard</td><td>Plotly</td><td>Hover, zoom, filter — no re-running code to explore</td></tr>
+<tr><td>Embedding a chart in a web app</td><td>Plotly</td><td>Renders natively as HTML/JS</td></tr>
+<tr><td>Faceted small-multiples across categories</td><td>Seaborn (<code>relplot</code>/<code>catplot</code>)</td><td>Built-in faceting grammar</td></tr>
+<tr><td>Custom annotated diagram (arrows, shaded regions)</td><td>Matplotlib</td><td>Full artist-level control</td></tr>
+</table>
+<h3>Full feature comparison</h3>
+<table><tr><th>Dimension</th><th>Matplotlib</th><th>Seaborn</th><th>Plotly</th></tr>
+<tr><td>Paradigm</td><td>Imperative</td><td>Declarative (stats-focused)</td><td>Declarative (express) / Imperative (graph_objects)</td></tr>
+<tr><td>Renders to</td><td>Static image/vector, in Python</td><td>Static image/vector, in Python</td><td>Interactive DOM, in the browser</td></tr>
+<tr><td>Interactivity</td><td>None natively</td><td>None natively</td><td>Zoom, pan, hover, legend toggle built in</td></tr>
+<tr><td>Input shape</td><td>Raw arrays</td><td>Tidy DataFrame + column names</td><td>Tidy DataFrame (express) or raw traces (graph_objects)</td></tr>
+<tr><td>Statistical estimation</td><td>Manual (you compute CI/regression yourself)</td><td>Automatic (bootstrapped CIs, regression fits)</td><td>Manual, or via <code>trendline=</code> in express</td></tr>
+<tr><td>3D / WebGL support</td><td>Limited (mplot3d, slow for big data)</td><td>None (2D only)</td><td>Native, GPU-accelerated for large scatter/surface plots</td></tr>
+<tr><td>Vector print export</td><td>PDF/EPS/SVG — journal standard</td><td>Same (inherits Matplotlib backend)</td><td>Only via optional <code>kaleido</code> engine</td></tr>
+<tr><td>Typical file size at scale</td><td>Fixed (depends on dpi, not row count)</td><td>Fixed (depends on dpi, not row count)</td><td>Grows with row count (data is embedded)</td></tr>
+<tr><td>Learning curve</td><td>Steeper — you build everything</td><td>Gentle — sane defaults</td><td>Gentle for express, steeper for graph_objects</td></tr>
+</table>
+<p>In practice, teams often use all three in one project: <strong>Matplotlib</strong> for final report figures, <strong>Seaborn</strong> during exploratory analysis, <strong>Plotly</strong> for the live dashboard stakeholders click through.</p>`},
+
+{id:"usecases", title:"Real-World Use Cases", kicker:"13 · Applied visualization", body:`
+<div class="usecase"><div class="tag">Finance</div><h4>Interactive stock dashboard</h4>
+<pre>fig = px.line(prices, x="date", y="close", color="ticker")
+fig.update_xaxes(rangeslider_visible=True)   # drag to zoom into any date range
+fig.write_html("portfolio_dashboard.html")</pre>
+<p>Analysts share this single file with clients — no server needed, fully interactive in any browser.</p></div>
+
+<div class="usecase"><div class="tag">EDA</div><h4>Correlation heatmap before modeling</h4>
+<pre>sns.heatmap(df.select_dtypes("number").corr(), annot=True, cmap="coolwarm")
+plt.title("Feature Correlation"); plt.savefig("corr.png")</pre>
+<p>The first chart in almost every ML notebook — flags multicollinearity before feature selection.</p></div>
+
+<div class="usecase"><div class="tag">Publication</div><h4>Journal-ready figure</h4>
+<pre>fig, ax = plt.subplots(figsize=(3.5,2.5), dpi=300)
+ax.plot(x, y, color="black", linewidth=1)
+ax.spines[["top","right"]].set_visible(False)
+fig.savefig("figure1.pdf", bbox_inches="tight")</pre>
+<p>Matplotlib's vector PDF output is what most academic journals require for figure submission.</p></div>
+
+<div class="usecase"><div class="tag">Operations</div><h4>Live monitoring dashboard</h4>
+<pre>fig = make_subplots(rows=2, cols=1)
+fig.add_trace(go.Scatter(x=ts, y=error_rate, name="Error Rate"), row=1, col=1)
+fig.add_trace(go.Bar(x=endpoints, y=latency_p95, name="p95 Latency"), row=2, col=1)</pre>
+<p>Embedded in internal ops tools (often behind a Flask/Dash app) for on-call engineers.</p></div>`},
+
+{id:"interview", title:"Interview Q&A", kicker:"14 · Theory + practical", body:`
+<details class="qa" open><summary>Matplotlib vs Seaborn vs Plotly — the one-line distinction?</summary><div class="body">Matplotlib is the low-level static-plotting engine; Seaborn is a statistical, DataFrame-friendly wrapper built on top of Matplotlib; Plotly is a separate, browser-rendered library built for interactivity.</div></details>
+<details class="qa"><summary>pyplot API vs Object-Oriented API in Matplotlib?</summary><div class="body">pyplot (<code>plt.plot()</code>) implicitly tracks a "current axes" — fine for one-off scripts. The OO API (<code>fig, ax = plt.subplots()</code>) is explicit and required once you have multiple subplots or are building reusable plotting functions.</div></details>
+<details class="qa"><summary>Axes-level vs Figure-level functions in Seaborn?</summary><div class="body">Axes-level functions (<code>boxplot</code>, <code>heatmap</code>) draw onto a single <code>matplotlib.Axes</code> and compose into custom subplot grids. Figure-level functions (<code>relplot</code>, <code>catplot</code>, <code>displot</code>) manage their own <code>Figure</code> and can auto-facet into small multiples via <code>col=</code>/<code>row=</code>.</div></details>
+<details class="qa"><summary>plotly.express vs graph_objects — when do you need graph_objects?</summary><div class="body">Use <code>express</code> for fast, declarative one-liners from a tidy DataFrame. Drop to <code>graph_objects</code> when you need to mix chart types in one figure, build custom subplot layouts, or fine-tune trace-level properties express doesn't expose.</div></details>
+<details class="qa"><summary>Why would a report use Matplotlib instead of Plotly if Plotly looks nicer?</summary><div class="body">Matplotlib exports true vector PDFs/EPS accepted by academic journals and print workflows; Plotly's native output is an HTML/JS object, which doesn't fit a print pipeline (though it can be rasterized to a static image via <code>kaleido</code>).</div></details>
+<details class="qa"><summary>How do you make a Seaborn plot facet by a categorical column?</summary><div class="body"><pre>sns.relplot(data=df, x="x", y="y", col="category", col_wrap=3)</pre></div></details>
+<details class="qa"><summary>How do you export an interactive Plotly chart that a non-programmer can open?</summary><div class="body"><code>fig.write_html("chart.html")</code> — a self-contained file with the full interactivity, openable in any browser.</div></details>
+<details class="qa"><summary>What does <code>hue=</code> do across Seaborn functions?</summary><div class="body">It maps a categorical column to color, automatically adding a legend — the same parameter name works consistently across <code>scatterplot</code>, <code>lineplot</code>, <code>boxplot</code>, etc., which is part of Seaborn's unified grammar.</div></details>`},
+
+{id:"cheatsheet", title:"Cheat Sheet", kicker:"15 · Quick reference", body:`
+<pre>## Matplotlib
+fig, ax = plt.subplots(figsize=(w,h))
+ax.plot(); ax.bar(); ax.hist(); ax.scatter()
+ax.set_xlabel(); ax.set_title(); ax.legend()
+fig.savefig("f.pdf")           # vector, print/journals
+fig.savefig("f.png", dpi=200)  # raster, web/slides
+
+## Seaborn
+sns.set_theme(style=, palette=, context=)
+sns.scatterplot/lineplot/boxplot/violinplot/heatmap(data=df, x=, y=, hue=)
+sns.relplot / catplot / displot(..., col=, row=)   # figure-level, auto-facets
+sns.pairplot(df, hue=); sns.jointplot(data=df, x=, y=)
+
+## Plotly
+px.line/bar/scatter/histogram(df, x=, y=, color=, size=)
+go.Figure(go.Scatter(...)); fig.update_layout(title=)
+make_subplots(rows=, cols=); fig.write_html("out.html")
+fig.update_xaxes(rangeslider_visible=True)   # zoomable time axis</pre>
+<p style="margin-top:24px;color:var(--muted);font-size:13px;">Pair this with the Pandas Complete Guide for a full analysis → visualization workflow.</p>`}
+];
+
+const nav = document.getElementById('navlist');
+const main = document.getElementById('main');
+sections.forEach((s,i)=>{
+  const li = document.createElement('li');
+  const btn = document.createElement('button');
+  btn.textContent = s.title; btn.dataset.id = s.id;
+  const n = document.createElement('span'); n.className='n'; n.textContent = String(i+1).padStart(2,'0');
+  btn.prepend(n);
+  btn.onclick = ()=> show(s.id);
+  li.appendChild(btn); nav.appendChild(li);
+
+  const sec = document.createElement('section');
+  sec.className='section'; sec.id='sec-'+s.id;
+  sec.innerHTML = `<div class="kicker">${s.kicker}</div><h2>${s.title}</h2>${s.body}`;
+  main.appendChild(sec);
+});
+
+let plotsInit = false, dashInit = false;
+function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+function initLivePlots(){
+  if (plotsInit) return; plotsInit = true;
+  const ink = css('--ink2'), grid = css('--line');
+  const base = {paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:ink, family:'Inter'},
+                margin:{t:10,r:10,b:36,l:44}, xaxis:{gridcolor:grid}, yaxis:{gridcolor:grid}};
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"];
+  Plotly.newPlot('plot-line', [
+    {x:months, y:[42,48,45,60,66,71,69,78], name:'North', mode:'lines+markers', line:{color:css('--plot1')}},
+    {x:months, y:[30,33,36,34,40,44,47,50], name:'South', mode:'lines+markers', line:{color:css('--plot2')}}
+  ], base, {responsive:true, displaylogo:false});
+
+  Plotly.newPlot('plot-bar', [
+    {x:["Electronics","Fashion","Grocery","Home","Books"], y:[82,64,91,53,37], type:'bar',
+     marker:{color:[css('--plot1'),css('--plot2'),css('--plot3'),css('--plot4'),css('--plot5')]}}
+  ], base, {responsive:true, displaylogo:false});
+
+  Plotly.newPlot('plot-bubble', [{
+    x:[120,340,89,210,410,55,275,190], y:[3.2,4.5,2.8,4.0,4.8,3.5,4.1,3.9],
+    text:["Product A","Product B","Product C","Product D","Product E","Product F","Product G","Product H"],
+    mode:'markers', marker:{size:[20,45,15,30,55,12,35,25], color:css('--plot1'), opacity:0.7}
+  }], {...base, xaxis:{...base.xaxis, title:'Price'}, yaxis:{...base.yaxis, title:'Rating'}},
+  {responsive:true, displaylogo:false});
+}
+function initDash(){
+  if (dashInit) return; dashInit = true;
+  const ink = css('--ink2'), grid = css('--line');
+  const base = {paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', font:{color:ink, family:'Inter', size:11},
+                margin:{t:10,r:10,b:30,l:36}, xaxis:{gridcolor:grid}, yaxis:{gridcolor:grid}};
+  Plotly.newPlot('plot-mini1', [{x:["Jan","Feb","Mar","Apr","May"], y:[42,48,45,60,66], type:'scatter', mode:'lines', line:{color:css('--plot1')}}], base, {responsive:true, displaylogo:false});
+  Plotly.newPlot('plot-mini2', [{labels:["Electronics","Fashion","Grocery","Home"], values:[82,64,91,53], type:'pie',
+    marker:{colors:[css('--plot1'),css('--plot2'),css('--plot3'),css('--plot4')]}}], base, {responsive:true, displaylogo:false});
+}
+
+function show(id){
+  document.querySelectorAll('.section').forEach(el=>el.classList.toggle('active', el.id==='sec-'+id));
+  document.querySelectorAll('.navlist button').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  const idx = sections.findIndex(s=>s.id===id);
+  document.getElementById('progress').style.width = (((idx+1)/sections.length)*100)+'%';
+  try{ localStorage.setItem('viz-guide-last', id); }catch(e){}
+  main.scrollTo({top:0});
+  window.location.hash = id;
+  if (id === 'ply-live') requestAnimationFrame(initLivePlots);
+  if (id === 'ply-dash') requestAnimationFrame(initDash);
+}
+let start = sections[0].id;
+try{
+  const h = window.location.hash.replace('#','');
+  const saved = localStorage.getItem('viz-guide-last');
+  if (h && sections.some(s=>s.id===h)) start = h;
+  else if (saved && sections.some(s=>s.id===saved)) start = saved;
+}catch(e){}
+show(start);
+</script>
+</body>
+</html>
