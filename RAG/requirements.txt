@@ -1,0 +1,10 @@
+﻿langchain
+langchain-core
+langchain-huggingface
+langchain-community
+
+# LLM providers
+langchain-groq
+
+jupyter
+ipykernel
