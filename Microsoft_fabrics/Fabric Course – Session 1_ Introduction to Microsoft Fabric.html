@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fabric Course – Session 1: Introduction to Microsoft Fabric</title>
+<style>
+:root{--bg:#f6f9fb;--card:#fff;--ink:#12212e;--mut:#5a6b7a;--tl:#0f9d82;--gold:#f5b800;--nav:#0b1826;--line:#dbe4ea;--soft:#e6f6f2;--warn:#fff4d6;--bad:#fdeaea;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1826;--card:#122536;--ink:#e8f0f5;--mut:#9fb2c1;--line:#25405a;--soft:#0f3a35;--warn:#3b3413;--bad:#3d1f24}}
+:root[data-theme="dark"]{--bg:#0b1826;--card:#122536;--ink:#e8f0f5;--mut:#9fb2c1;--line:#25405a;--soft:#0f3a35;--warn:#3b3413;--bad:#3d1f24}
+html{scroll-padding-top:calc(56px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(135deg,#0b1826,#0f6f66);color:#fff;padding:44px 20px 34px;text-align:center}
+header small{color:var(--gold);letter-spacing:.12em;font-weight:700}
+header h1{margin:8px 0;font-size:clamp(25px,5vw,40px)}
+header p{margin:0 auto;max-width:640px;opacity:.9}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.chips span{background:rgba(255,255,255,.14);border-radius:99px;padding:4px 14px;font-size:14px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--nav);display:flex;gap:6px;padding:10px;z-index:5;overflow-x:auto}
+nav a{color:#fff;text-decoration:none;font-size:13px;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.1);white-space:nowrap}
+main{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+h2{font-size:24px;margin:42px 0 8px;border-left:6px solid var(--gold);padding-left:12px}
+h3{margin:22px 0 6px;color:var(--tl);font-size:18px}
+.goal{background:var(--soft);border:1px solid var(--tl);border-radius:12px;padding:14px 18px;margin:14px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:12px 0}
+.tip{background:var(--warn);border-left:5px solid var(--gold);border-radius:8px;padding:12px 16px;margin:14px 0}
+.bad{background:var(--bad);border-left:5px solid #d9534f;border-radius:8px;padding:12px 16px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--card)}
+th{background:var(--nav);color:#fff;text-align:left}
+th,td{padding:8px 11px;border:1px solid var(--line);vertical-align:top}
+.tl{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.tl div{flex:1;min-width:130px;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--tl);border-radius:10px;padding:10px;text-align:center;font-size:14px}
+.tl div:last-child{border-top-color:var(--gold)}
+.ag{display:grid;grid-template-columns:86px 1fr;gap:6px 12px;font-size:15px}
+.ag b{color:var(--tl)}
+.stack{display:flex;flex-direction:column;gap:6px;margin:14px 0;text-align:center;font-size:14px}
+.stack div{border-radius:8px;padding:9px;background:var(--soft);border:1px solid var(--tl)}
+.stack .row{display:flex;gap:6px;background:none;border:0;padding:0}
+.stack .row span{flex:1;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 4px}
+.stack .lake{background:var(--gold);color:#000;font-weight:700;border-color:var(--gold)}
+li{margin:5px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+code{background:var(--soft);padding:1px 6px;border-radius:5px;font-size:14px}
+a{color:var(--tl);word-break:break-word}
+footer{text-align:center;color:var(--mut);padding:24px;font-size:14px}
+</style></head><body>
+<header><small>MICROSOFT FABRIC COURSE · MODULE 1</small>
+<h1>Session 1: Introduction to Microsoft Fabric</h1>
+<p>The Unified Data Platform. Read it before class, follow it live, revise from it afterwards.</p>
+<div class="chips"><span>👩‍🏫 Trainer: Prachi Kabra</span><span>2 hours</span><span>Absolute beginner</span><span>1 lab</span><span>1 mini project</span></div></header>
+<nav><a href="#a">Plan</a><a href="#b">What is Fabric</a><a href="#c">The problem</a><a href="#d">Evolution</a><a href="#e">Architecture</a><a href="#f">Workloads</a><a href="#g">Comparisons</a><a href="#h">Lab</a><a href="#i">Quiz</a><a href="#k">Official docs</a><a href="#j">Homework</a></nav>
+<main>
+
+<div class="goal" id="a"><b>🎯 Learning outcome:</b> Explain what Microsoft Fabric is and the problem it solves for enterprise data platforms.<br><b>You will be able to:</b> define Fabric in your own words · describe the fragmented-stack problem · trace the Microsoft data stack's evolution · name the workloads · compare Fabric with Synapse and Snowflake · create a Fabric workspace.</div>
+
+<h2>⏱ 2-hour plan</h2>
+<div class="card ag"><b>0:00–0:10</b><span>Welcome, course roadmap, how labs and assignments work</span><b>0:10–0:30</b><span>The fragmented data stack problem (with a story)</span><b>0:30–0:50</b><span>What Fabric is: SaaS, unified, OneLake</span><b>0:50–1:05</b><span>Evolution of the Microsoft data stack</span><b>1:05–1:20</b><span>Architecture and workloads tour</span><b>1:20–1:35</b><span>Fabric vs Synapse vs Snowflake</span><b>1:35–1:55</b><span>Lab 1: trial, capacity, workspace</span><b>1:55–2:00</b><span>Recap and homework</span></div>
+
+<h2 id="c">1. The problem: a fragmented data stack</h2>
+<h3>A story: Aarav's retail company</h3>
+<p>Aarav works for a mid-size retailer. Sales data sits in SQL Server. Web orders sit in a cloud database. Marketing exports CSV files. To get one report, the team:</p>
+<ol><li>Uses an ETL tool to copy data into a data lake.</li><li>Uses a Spark platform to clean it.</li><li>Loads it again into a separate warehouse.</li><li>Copies it once more into a BI tool for dashboards.</li></ol>
+<p>Now the same "Total Sales" number exists in <b>four places</b>. When they disagree, nobody knows which is right.</p>
+<div class="bad"><b>What goes wrong in a fragmented stack</b><ul><li><b>Duplicate data:</b> every tool keeps its own copy, so storage costs rise and numbers drift.</li><li><b>Many security models:</b> permissions are set separately in each tool, which is error-prone.</li><li><b>Many bills:</b> each service is priced and monitored differently.</li><li><b>Integration glue:</b> engineers spend time connecting tools instead of delivering insight.</li><li><b>Skill sprawl:</b> the team must learn a different product for every step.</li><li><b>Slow delivery:</b> each hand-off between tools adds delay and failure points.</li></ul></div>
+<p><b>Fabric's idea:</b> keep every step on one platform, working over <b>one copy of the data</b>.</p>
+
+<h2 id="b">2. What is Microsoft Fabric?</h2>
+<p>Microsoft Fabric is an <b>end-to-end, SaaS analytics platform</b>. It covers data movement, data engineering, data warehousing, real-time analytics, data science and business intelligence in a single product.</p>
+<div class="grid">
+<div class="card"><b>☁️ SaaS</b><br>Software as a Service. Microsoft runs the infrastructure. You do not create storage accounts, size clusters, or patch servers. You sign in and create items.</div>
+<div class="card"><b>🧩 Unified</b><br>All workloads share one portal, one workspace model, one security and governance layer, and one billing model based on capacity.</div>
+<div class="card"><b>🗄 OneLake</b><br>One logical data lake per organization, often called "OneDrive for data". Data is stored once, in the open Delta Parquet format, and every engine can read it.</div></div>
+<div class="tip">💡 <b>Analogy:</b> Old approach: carrying a camera, GPS, music player and phone. Fabric: one smartphone. The features work together, share one battery (capacity) and one storage (OneLake).</div>
+<h3>Key benefits</h3>
+<ul><li><b>Less setup:</b> start building in minutes.</li><li><b>Single copy of data:</b> less duplication, fewer disagreements.</li><li><b>Open format:</b> Delta Parquet avoids lock-in to one engine.</li><li><b>One governance layer:</b> consistent security, lineage and sensitivity labels.</li><li><b>Built-in AI:</b> Copilot assists across workloads (covered in Session 4).</li><li><b>Tight Power BI integration:</b> reports can read lake data directly (Direct Lake, Module 12).</li></ul>
+
+<h2 id="d">3. Evolution of the Microsoft data stack</h2>
+<div class="tl"><div><b>SQL Server</b><br>Relational database, on-premises</div><div><b>SSIS · SSAS · SSRS</b><br>Integration, analysis models, reports</div><div><b>Azure Synapse</b><br>Cloud analytics, many services (PaaS)</div><div><b>Power BI</b><br>Self-service BI</div><div><b>Microsoft Fabric</b><br>Unified SaaS platform</div></div>
+<div class="scroll"><table><tr><th>Stage</th><th>What it solved</th><th>What was still hard</th></tr>
+<tr><td>SQL Server</td><td>Reliable storage and querying of business data</td><td>Analytics competed with transactions; limited scale</td></tr>
+<tr><td>SSIS / SSAS / SSRS</td><td>Move data, model it, publish reports</td><td>Three separate tools, on-premises, IT-driven</td></tr>
+<tr><td>Azure Synapse</td><td>Cloud-scale warehouse plus Spark and pipelines</td><td>Many resources to provision, secure and pay for separately</td></tr>
+<tr><td>Power BI</td><td>Self-service visuals for business users</td><td>Still needed separate data platforms behind it</td></tr>
+<tr><td>Fabric</td><td>All of the above in one SaaS experience over OneLake</td><td>New platform: teams need to learn it and plan migrations</td></tr></table></div>
+
+<h2 id="e">4. Architecture at a glance</h2>
+<div class="stack">
+<div class="row"><span>Data Factory</span><span>Data Engineering</span><span>Warehouse</span><span>Real-Time</span><span>Data Science</span><span>Power BI</span></div>
+<div>Shared: security · governance · lineage · Copilot · monitoring</div>
+<div class="lake">OneLake: one logical lake, Delta Parquet everywhere</div>
+<div>Capacity: one pool of compute (CUs) shared by every workload</div></div>
+<p>Read it bottom-up: <b>capacity</b> supplies compute, <b>OneLake</b> stores data once, shared services apply governance, and the <b>workloads</b> on top are just different ways of working with the same data. (Session 3 goes deeper.)</p>
+
+<h2 id="f">5. The Fabric workloads</h2>
+<div class="scroll"><table><tr><th>Workload</th><th>What you build</th><th>Familiar equivalent</th><th>Course module</th></tr>
+<tr><td>Data Factory</td><td>Pipelines, Dataflows Gen2</td><td>ADF, SSIS</td><td>6</td></tr>
+<tr><td>Data Engineering</td><td>Lakehouse, Spark notebooks</td><td>Databricks, Synapse Spark</td><td>4, 7, 8, 9</td></tr>
+<tr><td>Data Warehouse</td><td>T-SQL warehouse</td><td>Synapse dedicated pool</td><td>5</td></tr>
+<tr><td>Real-Time Intelligence</td><td>Eventstream, Eventhouse, KQL, alerts</td><td>Azure Data Explorer, Stream Analytics</td><td>10</td></tr>
+<tr><td>Data Science</td><td>ML models, MLflow, AutoML</td><td>Azure Machine Learning</td><td>11</td></tr>
+<tr><td>Power BI</td><td>Semantic models, reports</td><td>Power BI Premium</td><td>12</td></tr></table></div>
+<div class="tip">🧠 <b>Remember:</b> a workload is an <i>experience</i>, not a separate product. You pick the tool that fits the task, and the data stays in OneLake.</div>
+
+<h2 id="g">6. Fabric vs Azure Synapse vs Snowflake</h2>
+<div class="scroll"><table><tr><th></th><th>Azure Synapse</th><th>Microsoft Fabric</th><th>Snowflake</th></tr>
+<tr><td><b>Delivery</b></td><td>PaaS: provision and configure resources</td><td>SaaS: ready to use</td><td>SaaS, runs on multiple clouds</td></tr>
+<tr><td><b>Storage</b></td><td>ADLS Gen2 you manage</td><td>OneLake, automatic</td><td>Managed storage; Iceberg tables supported</td></tr>
+<tr><td><b>Compute billing</b></td><td>Separate per pool or service</td><td>One shared capacity across workloads</td><td>Credits per virtual warehouse</td></tr>
+<tr><td><b>BI</b></td><td>Power BI is separate</td><td>Power BI built in</td><td>Through connectors</td></tr>
+<tr><td><b>Open formats</b></td><td>Delta and Parquet via lake</td><td>Delta Parquet by default</td><td>Proprietary storage, plus Iceberg</td></tr>
+<tr><td><b>Good fit</b></td><td>Existing Synapse estates</td><td>Microsoft-centric teams wanting one platform</td><td>Multi-cloud or Snowflake-first organizations</td></tr></table></div>
+<div class="tip">🗣 <b>Class discussion:</b> A company already runs Snowflake happily on AWS. Should it move to Fabric? Think about skills, existing contracts, data location, and switching cost. There is no universal "winner". This is the reasoning your Mini Project needs.</div>
+
+<h2 id="h">🧪 Lab 1: Your first Fabric workspace</h2>
+<p><b>Time:</b> 20 minutes · <b>Needs:</b> a work or school account and a browser (Edge or Chrome).</p>
+<ol>
+<li>Open <code>app.fabric.microsoft.com</code> and sign in. <i>Expected: the Fabric home page loads.</i></li>
+<li>Click your profile picture (top right) and start the <b>Fabric trial</b>. The free trial runs for 60 days, which covers this whole course. If the option is missing, ask your admin to enable it in the Admin Portal, or use a capacity your organization provides.</li>
+<li>Confirm the trial capacity was created. <i>Expected: a message showing the trial period and your capacity.</i></li>
+<li>Open <b>Workspaces → New workspace</b> and name it <code>FabricTraining-YourName</code>.</li>
+<li>In the workspace settings, open <b>License info</b> and choose your trial capacity.</li>
+<li>Explore the left menu: <b>Home, OneLake, Monitor, Workspaces</b>. Open the <b>+ New item</b> menu and note which workloads appear.</li></ol>
+<p><b>✅ Checkpoint:</b> a diamond capacity icon appears next to your workspace name, and <b>+ New item</b> lists Lakehouse, Warehouse, Notebook and more. Take a screenshot for your assignment.</p>
+<details><summary>🛠 Common problems and fixes</summary><ul><li><b>No trial option:</b> a tenant admin has disabled it. Ask them to allow users to try Fabric features.</li><li><b>Personal Gmail/Outlook rejected:</b> use a work or school (Entra ID) account, or a Microsoft 365 developer tenant.</li><li><b>Cannot assign capacity:</b> you need workspace admin rights and permission on the capacity.</li><li><b>No Fabric items in + New:</b> the workspace is not on a Fabric capacity. Repeat step 5.</li></ul></details>
+
+<h2 id="i">📝 Self-check quiz</h2>
+<details><summary>1. In one sentence, what problem does Fabric solve?</summary>It replaces a fragmented stack of separate tools, data copies, security models and bills with one platform working over one copy of data.</details>
+<details><summary>2. What does SaaS mean, and what do you stop managing?</summary>The vendor operates the service. You no longer provision, patch or scale servers, clusters or storage accounts.</details>
+<details><summary>3. What is OneLake, and which format does it use?</summary>Fabric's single logical data lake for the organization. Data is stored once in Delta Parquet.</details>
+<details><summary>4. Match: SSIS, Synapse dedicated pool, Azure Data Explorer.</summary>Data Factory, Warehouse, Real-Time Intelligence (Eventhouse/KQL).</details>
+<details><summary>5. Why is Fabric called "unified"?</summary>All workloads share one portal, workspaces, governance, storage layer and capacity billing.</details>
+<details><summary>6. Name two reasons a team might still choose Snowflake or stay on Synapse.</summary>Multi-cloud requirements or existing Snowflake skills and contracts; a stable Synapse estate with no urgent reason to migrate.</details>
+<details><summary>7. Is a Lakehouse a separate product from Fabric?</summary>No. It is an item inside Fabric's Data Engineering experience, stored in OneLake.</details>
+<details><summary>8. Interview style: "Why would a company adopt Fabric?"</summary>Model answer: to consolidate tools onto one SaaS platform with a single copy of data in open Delta format, simplify governance and billing, and integrate tightly with Power BI, while weighing migration effort and skills.</details>
+
+<h2 id="k">📚 Official Microsoft documentation</h2>
+<p>Use these Microsoft pages to go deeper. Pages open on Microsoft's own site and are the most up-to-date source for features, limits and pricing.</p>
+<div class="grid">
+<div class="card"><b>Microsoft Fabric documentation (home)</b><br>Start here: overview, get started, security, migration, Copilot, tutorials.<br><a href="https://learn.microsoft.com/fabric" target="_blank" rel="noopener">learn.microsoft.com/fabric</a><br><i>Supports: Sections 1–5</i></div>
+<div class="card"><b>Microsoft Learn: Fabric training</b><br>Free, self-paced modules and learning paths, plus certification practice.<br><a href="https://learn.microsoft.com/training/fabric" target="_blank" rel="noopener">learn.microsoft.com/training/fabric</a><br><i>Supports: revision after class</i></div>
+<div class="card"><b>Fabric free trial</b><br>How to start the 60-day trial, what is included, and what happens when it ends.<br><a href="https://learn.microsoft.com/fabric/get-started/fabric-trial" target="_blank" rel="noopener">learn.microsoft.com/fabric/get-started/fabric-trial</a><br><i>Supports: Lab 1</i></div>
+<div class="card"><b>Get started with Microsoft Fabric</b><br>Microsoft's landing page to sign in and start the free trial.<br><a href="https://microsoft.com/microsoft-fabric/getting-started" target="_blank" rel="noopener">microsoft.com/microsoft-fabric/getting-started</a><br><i>Supports: Lab 1</i></div>
+<div class="card"><b>OneLake overview</b><br>What OneLake is, how tenant, workspace and items are organized, and its open formats.<br><a href="https://learn.microsoft.com/fabric/onelake/onelake-overview" target="_blank" rel="noopener">learn.microsoft.com/fabric/onelake/onelake-overview</a><br><i>Supports: Sections 2 and 4</i></div>
+<div class="card"><b>Decision guide: choose a data store</b><br>When to use a lakehouse, warehouse, eventhouse or SQL database in Fabric.<br><a href="https://learn.microsoft.com/en-us/fabric/fundamentals/decision-guide-data-store" target="_blank" rel="noopener">learn.microsoft.com/…/decision-guide-data-store</a><br><i>Supports: Sections 5 and 6, Mini Project</i></div></div>
+<div class="tip">📌 <b>Facts from the official trial page:</b> the trial lasts 60 days, gives access to Fabric workloads and up to 1 TB of OneLake storage, and is meant for learning and testing, not production. When it ends, non-Power BI Fabric items become inaccessible unless the workspace moves to a paid capacity, so keep your notes and screenshots.<br>💡 <b>Where to look:</b> in the Fabric docs, "What is Fabric?", "Start a Fabric trial" and "Migrate to Fabric" are the three pages most useful for this session and your Platform Decision Memo.</div>
+
+<h2 id="j">📌 Homework</h2>
+<div class="card"><b>Assignment (30–45 min):</b> write a one-page architecture note comparing the pre-Fabric Microsoft stack (SSIS/SSAS/SSRS) with Microsoft Fabric. Include a simple diagram of each.<br><br>
+<b>Mini Project: Platform Decision Memo (1–2 pages).</b> Situation: a mid-size retailer wants to move off on-premises SQL Server. Recommend Fabric or an alternative.<ul><li><b>Context:</b> current systems, pain points, goals</li><li><b>Options considered:</b> Fabric, one alternative (Synapse, Snowflake, or Databricks)</li><li><b>Comparison:</b> cost, skills, migration effort, governance, scalability</li><li><b>Recommendation and risks:</b> what you choose and what could go wrong</li></ul>
+<b>Tip:</b> justify with trade-offs. A memo that says "Fabric is best" without reasons will not score well.</div>
+<div class="card"><b>Before Session 2:</b> make sure your trial is active. Session 2 covers licensing, Capacity Units and creating your Retail-Dev and Retail-Prod workspaces.</div>
+</main>
+<footer>Microsoft Fabric Course · Trainer: Prachi Kabra</footer>
+</body></html>
